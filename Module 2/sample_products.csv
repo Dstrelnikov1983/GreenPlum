@@ -1,0 +1,101 @@
+product_id,product_name,category,brand,unit_cost,unit_price,stock_quantity
+1,Laptop Pro 15,Electronics,TechBrand,850.00,1299.99,45
+2,Smartphone X12,Electronics,PhoneCorp,420.00,699.99,120
+3,Wireless Mouse,Electronics,AccessPro,15.50,29.99,200
+4,USB-C Cable 2m,Electronics,CableCo,3.50,12.99,350
+5,4K Monitor 27inch,Electronics,DisplayTech,280.00,449.99,35
+6,Mechanical Keyboard,Electronics,KeyMaster,75.00,129.99,80
+7,Bluetooth Headphones,Electronics,AudioMax,65.00,149.99,95
+8,External SSD 1TB,Electronics,StoragePro,95.00,179.99,70
+9,Webcam HD Pro,Electronics,CamTech,55.00,89.99,60
+10,Laptop Stand Aluminum,Electronics,DeskGear,18.00,39.99,150
+11,Men T-Shirt Basic,Clothing,FashionCo,8.50,24.99,500
+12,Women Jeans Slim,Clothing,DenimStyle,22.00,59.99,250
+13,Men Jacket Winter,Clothing,OutdoorWear,45.00,119.99,100
+14,Women Dress Casual,Clothing,ElegantStyle,28.00,79.99,180
+15,Running Shoes Men,Clothing,SportsFit,38.00,89.99,200
+16,Women Sneakers,Clothing,ComfortWalk,35.00,79.99,220
+17,Men Belt Leather,Clothing,LeatherCraft,12.00,34.99,300
+18,Women Handbag,Clothing,BagStyle,45.00,129.99,85
+19,Men Watch Casual,Clothing,TimeStyle,55.00,149.99,120
+20,Women Sunglasses,Clothing,EyeStyle,25.00,69.99,180
+21,Coffee Beans Premium,Food,CoffeeLuxe,12.00,24.99,400
+22,Green Tea Organic,Food,TeaMaster,8.50,18.99,350
+23,Orange Juice Fresh,Food,FruitBest,3.50,6.99,500
+24,Chocolate Bar Dark,Food,CocoaDelight,2.50,4.99,600
+25,Cookies Assorted,Food,BakeryFresh,4.00,8.99,450
+26,Whole Grain Bread,Food,BreadCo,2.00,3.99,700
+27,Pasta Organic,Food,ItalianChoice,3.50,7.99,380
+28,Olive Oil Extra Virgin,Food,MediterraneanGold,8.00,16.99,280
+29,Honey Natural,Food,BeeFarm,6.50,12.99,320
+30,Almonds Roasted,Food,NutHarvest,9.00,15.99,250
+31,Fiction Novel Bestseller,Books,ReadMore,8.00,19.99,200
+32,Science Textbook,Books,EduPublish,25.00,54.99,100
+33,History Encyclopedia,Books,KnowledgePress,35.00,79.99,60
+34,Biography Great Leaders,Books,LifeStories,12.00,24.99,150
+35,Children Illustrated Book,Books,KidsRead,6.50,14.99,300
+36,Cookbook International,Books,ChefBooks,15.00,29.99,120
+37,Self-Help Motivation,Books,InspireMe,10.00,19.99,180
+38,Travel Guide Europe,Books,WorldTravel,14.00,27.99,95
+39,Programming Python,Books,TechPress,28.00,49.99,85
+40,Art History Book,Books,ArtWorld,32.00,64.99,55
+41,Garden Tool Set,Home,GardenPro,35.00,69.99,80
+42,Indoor Plant Pot,Home,PlantStyle,8.50,19.99,250
+43,LED Light Bulbs Pack,Home,BrightHome,12.00,24.99,400
+44,Kitchen Knife Set,Home,ChefTools,45.00,89.99,110
+45,Towel Set Cotton,Home,LinenLux,18.00,34.99,200
+46,Picture Frame Wood,Home,FrameArt,9.50,22.99,180
+47,Candle Scented Set,Home,AromaHome,15.00,29.99,220
+48,Curtains Blackout,Home,WindowStyle,25.00,54.99,95
+49,Storage Box Plastic,Home,OrganizePro,6.50,14.99,350
+50,Doormat Welcome,Home,EntryStyle,8.00,17.99,270
+51,Board Game Family,Toys,FunTime,18.00,39.99,150
+52,Puzzle 1000 Pieces,Toys,BrainGames,12.00,24.99,200
+53,Action Figure Hero,Toys,PlayToys,8.50,19.99,300
+54,Doll Princess Set,Toys,DreamToys,15.00,34.99,180
+55,Remote Control Car,Toys,RaceFun,25.00,54.99,120
+56,Building Blocks Set,Toys,BuildIt,22.00,44.99,160
+57,Art Supplies Kit,Toys,CreativeKids,18.00,36.99,140
+58,Soccer Ball Official,Toys,SportPlay,15.00,29.99,200
+59,Basketball Indoor,Toys,HoopMaster,18.00,39.99,150
+60,Chess Set Wood,Toys,StrategyGames,28.00,59.99,85
+61,Gaming Mouse RGB,Electronics,GameGear,35.00,69.99,110
+62,Gaming Keyboard Mechanical,Electronics,GameGear,85.00,159.99,75
+63,Gaming Headset Surround,Electronics,AudioGaming,65.00,129.99,90
+64,Monitor 32inch Curved,Electronics,DisplayPro,380.00,699.99,40
+65,Webcam 4K Streaming,Electronics,StreamTech,95.00,179.99,55
+66,Microphone USB Studio,Electronics,AudioPro,75.00,149.99,65
+67,Graphics Tablet,Electronics,ArtDigital,120.00,249.99,45
+68,Portable SSD 2TB,Electronics,StorageMax,180.00,329.99,50
+69,Router WiFi 6,Electronics,NetworkPro,85.00,159.99,80
+70,Smart Speaker AI,Electronics,SmartHome,55.00,99.99,120
+71,Fitness Tracker,Electronics,HealthTech,45.00,89.99,150
+72,Smartwatch Pro,Electronics,WearableTech,180.00,349.99,60
+73,Drone Camera 4K,Electronics,SkyView,280.00,549.99,35
+74,VR Headset Gaming,Electronics,VirtualReality,320.00,599.99,30
+75,Tablet 10inch,Electronics,TabletCo,220.00,399.99,70
+76,E-Reader Paperwhite,Electronics,ReadTech,95.00,169.99,85
+77,Projector Home Cinema,Electronics,ViewPro,380.00,699.99,25
+78,Soundbar TV,Electronics,AudioHome,120.00,249.99,60
+79,Security Camera WiFi,Electronics,SafeHome,65.00,129.99,95
+80,Smart Thermostat,Electronics,HomeTech,85.00,169.99,70
+81,Women Yoga Pants,Clothing,ActiveWear,18.00,44.99,280
+82,Men Polo Shirt,Clothing,CasualStyle,15.00,34.99,320
+83,Women Cardigan,Clothing,KnitStyle,22.00,54.99,180
+84,Men Shorts Sport,Clothing,SportActive,12.00,29.99,250
+85,Women Scarf Silk,Clothing,Accessories,18.00,39.99,200
+86,Men Gloves Leather,Clothing,WinterGear,16.00,36.99,150
+87,Women Boots Ankle,Clothing,FootStyle,48.00,119.99,110
+88,Men Sandals Summer,Clothing,SummerWear,22.00,49.99,180
+89,Women Backpack Travel,Clothing,TravelGear,35.00,79.99,140
+90,Men Cap Baseball,Clothing,HeadWear,8.50,19.99,300
+91,Protein Powder Whey,Food,FitNutrition,25.00,49.99,180
+92,Energy Bars Pack,Food,HealthSnack,12.00,24.99,250
+93,Mineral Water Sparkling,Food,PureWater,1.50,2.99,800
+94,Yogurt Greek Organic,Food,DairyFresh,3.50,6.99,450
+95,Cheese Cheddar Block,Food,CheeseArt,6.50,12.99,320
+96,Salmon Fillet Fresh,Food,SeaFood,15.00,29.99,120
+97,Chicken Breast Organic,Food,FarmFresh,8.50,16.99,200
+98,Rice Basmati Premium,Food,GrainSelect,5.50,11.99,380
+99,Tomato Sauce Organic,Food,ItalianKitchen,3.50,7.99,420
+100,Spices Set Gourmet,Food,FlavorWorld,15.00,29.99,150

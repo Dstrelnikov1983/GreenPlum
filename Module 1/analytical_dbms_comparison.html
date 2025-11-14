@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сравнение аналитических СУБД</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: white;
+            padding: 60px;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .slide-header {
+            background: #4472C4;
+            color: white;
+            padding: 20px 40px;
+            margin: -60px -60px 40px -60px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .slide-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 20px;
+        }
+
+        h2 {
+            color: #4472C4;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #ED7D31;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        h4 {
+            color: #4472C4;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        ul {
+            margin-left: 30px;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+
+        .comparison-table th {
+            background: #4472C4;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+
+        .comparison-table td {
+            padding: 10px 8px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #F5F5F5;
+        }
+
+        .highlight {
+            background: #FFF2CC;
+            padding: 20px;
+            border-left: 4px solid #ED7D31;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #E2EFDA;
+            padding: 20px;
+            border-left: 4px solid #70AD47;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box {
+            background: #E7F3FF;
+            padding: 20px;
+            border-left: 4px solid #4472C4;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .dbms-card {
+            background: #F5F5F5;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4472C4;
+        }
+
+        .dbms-card h4 {
+            color: #4472C4;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .pros, .cons {
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .pros {
+            background: #E2EFDA;
+            border-left: 4px solid #70AD47;
+        }
+
+        .cons {
+            background: #FCE4EC;
+            border-left: 4px solid #E91E63;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+            gap: 2px;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+
+        .score-header {
+            background: #4472C4;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .score-cell {
+            background: #F5F5F5;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .score-name {
+            background: #E7E6E6;
+            padding: 10px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .score-5 { background: #70AD47; color: white; font-weight: bold; }
+        .score-4 { background: #A9D18E; color: #333; }
+        .score-3 { background: #FFD966; color: #333; }
+        .score-2 { background: #F4B183; color: #333; }
+        .score-1 { background: #FF6B6B; color: white; }
+
+        .discussion-box {
+            background: #E7E6E6;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #ED7D31;
+        }
+
+        .discussion-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #4472C4;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #ED7D31;
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(68, 114, 196, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+
+        .badge-cloud { background: #B4C7E7; color: #1F4E78; }
+        .badge-onprem { background: #C5E0B4; color: #375623; }
+        .badge-hybrid { background: #FFD966; color: #7F6000; }
+        .badge-opensource { background: #A9D18E; color: #375623; }
+        .badge-commercial { background: #F4B183; color: #843C0C; }
+
+        strong {
+            color: #4472C4;
+        }
+
+        .key-point {
+            font-size: 1.1em;
+            color: #ED7D31;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .vendor-logo {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4472C4;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="slide-header">
+                Сравнение аналитических СУБД
+            </div>
+            <div class="slide-content" style="justify-content: center; align-items: center; text-align: center;">
+                <h2 style="font-size: 2.5em; margin-bottom: 40px;">Обзор популярных MPP и облачных систем</h2>
+                <p style="font-size: 1.4em; color: #666; margin-bottom: 60px;">
+                    Детальное сравнение аналитических СУБД для принятия обоснованных решений
+                </p>
+                <div class="three-column" style="text-align: center; font-size: 1.1em;">
+                    <div class="dbms-card">
+                        <div class="vendor-logo">☁️ Облачные</div>
+                        <p>AWS Redshift<br>Azure Synapse<br>BigQuery<br>Snowflake<br>Databricks</p>
+                    </div>
+                    <div class="dbms-card">
+                        <div class="vendor-logo">🖥️ On-Premise</div>
+                        <p>GreenPlum<br>ClickHouse</p>
+                    </div>
+                    <div class="dbms-card">
+                        <div class="vendor-logo">🔄 Гибридные</div>
+                        <p>Все системы<br>поддерживают<br>гибридные сценарии</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview Table -->
+        <div class="slide">
+            <div class="slide-header">
+                Обзорная таблица сравнения
+            </div>
+            <div class="slide-content">
+                <h2>Основные характеристики</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>СУБД</th>
+                            <th>Вендор</th>
+                            <th>Архитектура</th>
+                            <th>Модель развёртывания</th>
+                            <th>Ценовая модель</th>
+                            <th>Год запуска</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GreenPlum</strong></td>
+                            <td>VMware (Open Source)</td>
+                            <td>MPP, Shared Nothing</td>
+                            <td>On-Premise, Cloud</td>
+                            <td>Open Source / Enterprise</td>
+                            <td>2003</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AWS Redshift</strong></td>
+                            <td>Amazon Web Services</td>
+                            <td>MPP, Columnar</td>
+                            <td>Cloud Only</td>
+                            <td>Pay-per-use</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Azure Synapse</strong></td>
+                            <td>Microsoft</td>
+                            <td>MPP + Serverless</td>
+                            <td>Cloud Only</td>
+                            <td>Pay-per-use / Dedicated</td>
+                            <td>2019 (ex SQL DW)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BigQuery</strong></td>
+                            <td>Google Cloud</td>
+                            <td>Serverless, Columnar</td>
+                            <td>Cloud Only</td>
+                            <td>Pay-per-query</td>
+                            <td>2011</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Snowflake</strong></td>
+                            <td>Snowflake Inc.</td>
+                            <td>Multi-cluster, Shared Data</td>
+                            <td>Cloud (Multi-cloud)</td>
+                            <td>Pay-per-use</td>
+                            <td>2014</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ClickHouse</strong></td>
+                            <td>ClickHouse Inc. (Open Source)</td>
+                            <td>Columnar, Distributed</td>
+                            <td>On-Premise, Cloud</td>
+                            <td>Open Source / Cloud</td>
+                            <td>2016</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Databricks</strong></td>
+                            <td>Databricks Inc.</td>
+                            <td>Lakehouse, Spark-based</td>
+                            <td>Cloud (Multi-cloud)</td>
+                            <td>Pay-per-use (DBU)</td>
+                            <td>2013</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <strong>💡 Важно:</strong> Выбор СУБД зависит от множества факторов: объёма данных, типа нагрузки, 
+                    бюджета, требований к безопасности, наличия облачной инфраструктуры и экспертизы команды.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: GreenPlum Details -->
+        <div class="slide">
+            <div class="slide-header">
+                GreenPlum: Подробный обзор
+            </div>
+            <div class="slide-content">
+                <h2>VMware Tanzu GreenPlum</h2>
+                
+                <div style="margin: 20px 0;">
+                    <span class="badge badge-opensource">Open Source</span>
+                    <span class="badge badge-onprem">On-Premise</span>
+                    <span class="badge badge-hybrid">Hybrid Cloud</span>
+                </div>
+
+                <h3>Ключевые особенности</h3>
+                <ul>
+                    <li><strong>PostgreSQL-совместимость:</strong> Основан на PostgreSQL 9.4, полная совместимость с SQL</li>
+                    <li><strong>MPP архитектура:</strong> Массивно-параллельная обработка с архитектурой Shared Nothing</li>
+                    <li><strong>Зрелость:</strong> 20+ лет на рынке, проверенное решение для enterprise</li>
+                    <li><strong>Гибкость развёртывания:</strong> On-premise, частное облако, managed cloud (Yandex, VMware)</li>
+                    <li><strong>Open Source:</strong> Исходный код доступен, активное сообщество</li>
+                </ul>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Преимущества</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Низкая стоимость владения (TCO)</li>
+                            <li>Полный контроль над данными</li>
+                            <li>Отличная производительность на сложных запросах</li>
+                            <li>Богатая экосистема PostgreSQL</li>
+                            <li>Поддержка Python, R, Java (PL/Python, PL/R)</li>
+                            <li>Нет vendor lock-in</li>
+                            <li>Сильная поддержка ANSI SQL</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ Ограничения</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Требует экспертизы для настройки</li>
+                            <li>Ручное масштабирование (добавление узлов)</li>
+                            <li>Ограниченная поддержка semi-structured данных</li>
+                            <li>Обновление PostgreSQL версии задерживается</li>
+                            <li>Требуется администрирование инфраструктуры</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎯 Лучше всего подходит для:</strong><br>
+                    • Корпоративных DWH с предсказуемой нагрузкой<br>
+                    • Сценариев с требованиями к data residency<br>
+                    • Проектов с ограниченным бюджетом<br>
+                    • Команд с PostgreSQL экспертизой
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: AWS Redshift -->
+        <div class="slide">
+            <div class="slide-header">
+                Amazon Redshift: Облачное MPP решение
+            </div>
+            <div class="slide-content">
+                <h2>AWS Redshift</h2>
+                
+                <div style="margin: 20px 0;">
+                    <span class="badge badge-cloud">Cloud Native</span>
+                    <span class="badge badge-commercial">Commercial</span>
+                </div>
+
+                <h3>Ключевые особенности</h3>
+                <ul>
+                    <li><strong>Managed Service:</strong> Полностью управляемый сервис от AWS</li>
+                    <li><strong>Columnar Storage:</strong> Оптимизированное колоночное хранение</li>
+                    <li><strong>Redshift Spectrum:</strong> Прямые запросы к данным в S3</li>
+                    <li><strong>Concurrency Scaling:</strong> Автоматическое масштабирование для пиковых нагрузок</li>
+                    <li><strong>ML Integration:</strong> Встроенная интеграция с Amazon SageMaker</li>
+                    <li><strong>Materialized Views:</strong> Автоматическое обновление материализованных представлений</li>
+                </ul>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Преимущества</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Глубокая интеграция с AWS экосистемой</li>
+                            <li>Простота развёртывания и управления</li>
+                            <li>Автоматические бэкапы и recovery</li>
+                            <li>Redshift Spectrum для S3 data lake</li>
+                            <li>Возможность резервирования (RI) для снижения затрат</li>
+                            <li>Поддержка федеративных запросов</li>
+                            <li>AQUA (Advanced Query Accelerator)</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ Ограничения</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Vendor lock-in в экосистему AWS</li>
+                            <li>Высокая стоимость при больших объёмах</li>
+                            <li>Ограничения на concurrency (50 connections)</li>
+                            <li>Требуется оптимизация distribution keys</li>
+                            <li>Сложность миграции данных наружу</li>
+                            <li>Ограниченная поддержка транзакций</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>💰 Ценообразование:</strong><br>
+                    • On-Demand: ~$0.25/час за dc2.large узел<br>
+                    • Reserved Instances: скидка до 75% при резервировании на 1-3 года<br>
+                    • Redshift Serverless: $0.375 за RPU-час (с минимальной базой)
+                </div>
+
+                <div class="success-box">
+                    <strong>🎯 Лучше всего подходит для:</strong><br>
+                    • Проектов в AWS экосистеме<br>
+                    • BI и аналитики с интеграцией S3<br>
+                    • Предсказуемых workloads с Reserved Instances
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Azure Synapse Analytics -->
+        <div class="slide">
+            <div class="slide-header">
+                Azure Synapse Analytics: Интегрированная аналитика
+            </div>
+            <div class="slide-content">
+                <h2>Microsoft Azure Synapse Analytics</h2>
+                
+                <div style="margin: 20px 0;">
+                    <span class="badge badge-cloud">Cloud Native</span>
+                    <span class="badge badge-commercial">Commercial</span>
+                    <span class="badge badge-hybrid">Unified Analytics</span>
+                </div>
+
+                <h3>Ключевые особенности</h3>
+                <ul>
+                    <li><strong>Unified Platform:</strong> Объединение DW, Big Data и Data Integration</li>
+                    <li><strong>Serverless + Dedicated:</strong> Два режима работы для разных сценариев</li>
+                    <li><strong>T-SQL Support:</strong> Полная поддержка T-SQL для SQL Server экспертов</li>
+                    <li><strong>Apache Spark Integration:</strong> Встроенные Spark pools для обработки больших данных</li>
+                    <li><strong>Synapse Studio:</strong> Единый интерфейс для разработки и управления</li>
+                    <li><strong>Azure Integration:</strong> Нативная интеграция с Power BI, Azure ML, Data Factory</li>
+                </ul>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Преимущества</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Единая платформа для всех аналитических задач</li>
+                            <li>Serverless опция для ad-hoc запросов</li>
+                            <li>Отличная интеграция с Microsoft экосистемой</li>
+                            <li>Поддержка как SQL, так и Spark workloads</li>
+                            <li>Гибкая модель оплаты (DWU/cDWU)</li>
+                            <li>Автоматическое pause/resume для экономии</li>
+                            <li>Встроенная безопасность и compliance</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ Ограничения</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Сложность архитектуры для новичков</li>
+                            <li>Высокая стоимость Dedicated Pools</li>
+                            <li>Serverless имеет ограничения на размер данных</li>
+                            <li>Vendor lock-in в Azure</li>
+                            <li>Требуется понимание распределения данных</li>
+                            <li>Ограничения на concurrent queries</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>💰 Ценообразование:</strong><br>
+                    • Dedicated Pool: от $1.20/час за DW100c (100 DWU)<br>
+                    • Serverless: $5 за TB обработанных данных<br>
+                    • Spark Pools: от $0.319/час за малый узел<br>
+                    • Возможность приостановки пулов для экономии
+                </div>
+
+                <div class="success-box">
+                    <strong>🎯 Лучше всего подходит для:</strong><br>
+                    • Организаций в Microsoft экосистеме<br>
+                    • Проектов, требующих SQL + Spark<br>
+                    • Интеграции с Power BI и Azure ML<br>
+                    • Unified analytics workloads
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Google BigQuery -->
+        <div class="slide">
+            <div class="slide-header">
+                Google BigQuery: Serverless аналитика
+            </div>
+            <div class="slide-content">
+                <h2>Google BigQuery</h2>
+                
+                <div style="margin: 20px 0;">
+                    <span class="badge badge-cloud">Serverless</span>
+                    <span class="badge badge-commercial">Commercial</span>
+                </div>
+
+                <h3>Ключевые особенности</h3>
+                <ul>
+                    <li><strong>Полностью Serverless:</strong> Нет необходимости в управлении инфраструктурой</li>
+                    <li><strong>Columnar Storage:</strong> Оптимизированное хранение в Capacitor формате</li>
+                    <li><strong>Автоматическое масштабирование:</strong> До тысяч узлов за секунды</li>
+                    <li><strong>ML встроен:</strong> BigQuery ML для моделей машинного обучения на SQL</li>
+                    <li><strong>Multi-region replication:</strong> Автоматическая репликация данных</li>
+                    <li><strong>Standard SQL:</strong> Полная поддержка SQL:2011</li>
+                    <li><strong>Федеративные запросы:</strong> К Cloud Storage, Bigtable, Sheets</li>
+                </ul>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Преимущества</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Нулевое администрирование инфраструктуры</li>
+                            <li>Невероятная скорость запросов на больших данных</li>
+                            <li>Оплата только за обработанные данные</li>
+                            <li>Автоматическое резервное копирование</li>
+                            <li>Встроенный ML без выгрузки данных</li>
+                            <li>Потоковая загрузка данных (streaming)</li>
+                            <li>Интеграция с Google Cloud экосистемой</li>
+                            <li>Разделение compute и storage</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ Ограничения</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Высокая стоимость при частых запросах</li>
+                            <li>Ограничения на UPDATE/DELETE операции</li>
+                            <li>Сложность оптимизации затрат</li>
+                            <li>Vendor lock-in в GCP</li>
+                            <li>Ограничения на DML операции (1500/день)</li>
+                            <li>Нет контроля над физической оптимизацией</li>
+                            <li>Стоимость хранения растёт с объёмом</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>💰 Ценообразование:</strong><br>
+                    • On-Demand: $5 за TB обработанных данных (первые 1TB/месяц бесплатно)<br>
+                    • Storage: $0.02 за GB активных данных, $0.01 за GB long-term storage<br>
+                    • Flat-Rate: от $2,000/месяц за 100 slots (фиксированная capacity)<br>
+                    • Streaming Inserts: $0.01 за 200MB
+                </div>
+
+                <div class="success-box">
+                    <strong>🎯 Лучше всего подходит для:</strong><br>
+                    • Ad-hoc аналитики на больших данных<br>
+                    • Проектов в GCP экосистеме<br>
+                    • ML задач с BigQuery ML<br>
+                    • Workloads без частых UPDATE/DELETE
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Snowflake -->
+        <div class="slide">
+            <div class="slide-header">
+                Snowflake: Cloud Data Platform
+            </div>
+            <div class="slide-content">
+                <h2>Snowflake Data Cloud</h2>
+                
+                <div style="margin: 20px 0;">
+                    <span class="badge badge-cloud">Multi-Cloud</span>
+                    <span class="badge badge-commercial">Commercial</span>
+                    <span class="badge badge-hybrid">Hybrid Tables</span>
+                </div>
+
+                <h3>Ключевые особенности</h3>
+                <ul>
+                    <li><strong>Уникальная архитектура:</strong> Shared Data + Multi-Cluster Compute</li>
+                    <li><strong>Multi-Cloud:</strong> Работает на AWS, Azure, GCP с единым опытом</li>
+                    <li><strong>Разделение Storage/Compute:</strong> Независимое масштабирование</li>
+                    <li><strong>Zero-Copy Cloning:</strong> Мгновенное клонирование баз без копирования данных</li>
+                    <li><strong>Time Travel:</strong> Доступ к историческим данным (до 90 дней)</li>
+                    <li><strong>Data Sharing:</strong> Безопасный обмен данными между организациями</li>
+                    <li><strong>Auto-Scaling:</strong> Автоматическое масштабирование warehouse</li>
+                </ul>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Преимущества</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Не привязан к одному облачному провайдеру</li>
+                            <li>Нулевое администрирование</li>
+                            <li>Отличная поддержка semi-structured данных (JSON, Avro, Parquet)</li>
+                            <li>Мгновенная эластичность</li>
+                            <li>Уникальные возможности Data Sharing</li>
+                            <li>Встроенная оптимизация запросов</li>
+                            <li>Поддержка ACID транзакций</li>
+                            <li>Простота использования</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ Ограничения</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Высокая стоимость (самый дорогой вариант)</li>
+                            <li>Сложность прогнозирования затрат</li>
+                            <li>Vendor lock-in в Snowflake</li>
+                            <li>Ограниченная кастомизация</li>
+                            <li>Стоимость хранения выше, чем у cloud native решений</li>
+                            <li>Нет полного контроля над оптимизацией</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>💰 Ценообразование:</strong><br>
+                    • Compute: $2-4 за credit/час (зависит от региона и edition)<br>
+                    • Storage: $23-40 за TB/месяц<br>
+                    • Data Transfer: дополнительные сборы за egress<br>
+                    • Минимум: нет минимальных обязательств, pay-as-you-go
+                </div>
+
+                <div class="success-box">
+                    <strong>🎯 Лучше всего подходит для:</strong><br>
+                    • Multi-cloud стратегий<br>
+                    • Data sharing между организациями<br>
+                    • Workloads с переменной нагрузкой<br>
+                    • Проектов с бюджетом и требованиями к простоте
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: ClickHouse -->
+        <div class="slide">
+            <div class="slide-header">
+                ClickHouse: OLAP для real-time аналитики
+            </div>
+            <div class="slide-content">
+                <h2>ClickHouse</h2>
+                
+                <div style="margin: 20px 0;">
+                    <span class="badge badge-opensource">Open Source</span>
+                    <span class="badge badge-onprem">On-Premise</span>
+                    <span class="badge badge-cloud">Cloud Option</span>
+                </div>
+
+                <h3>Ключевые особенности</h3>
+                <ul>
+                    <li><strong>Columnar OLAP:</strong> Экстремально быстрая колоночная СУБД</li>
+                    <li><strong>Real-time вставки:</strong> Оптимизирован для потоковой загрузки данных</li>
+                    <li><strong>Векторизация:</strong> SIMD инструкции для ускорения вычислений</li>
+                    <li><strong>Compression:</strong> Высокий уровень сжатия данных (до 10x)</li>
+                    <li><strong>Distributed queries:</strong> Нативная поддержка распределённых запросов</li>
+                    <li><strong>Materialized Views:</strong> Мощные возможности предагрегации</li>
+                    <li><strong>SQL Support:</strong> Диалект SQL с расширениями для аналитики</li>
+                </ul>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Преимущества</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Невероятная скорость для OLAP запросов</li>
+                            <li>Низкое потребление ресурсов</li>
+                            <li>Отличная поддержка time-series данных</li>
+                            <li>Real-time инсерты с высокой throughput</li>
+                            <li>Гибкость table engines (MergeTree, ReplacingMergeTree, etc.)</li>
+                            <li>Низкая стоимость владения</li>
+                            <li>Активное open source сообщество</li>
+                            <li>Простота горизонтального масштабирования</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ Ограничения</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Ограниченная поддержка UPDATE/DELETE</li>
+                            <li>Нет полноценных транзакций ACID</li>
+                            <li>Требуется экспертиза для настройки</li>
+                            <li>Диалект SQL отличается от стандарта</li>
+                            <li>Ручная настройка репликации и sharding</li>
+                            <li>Ограниченная поддержка JOIN на больших данных</li>
+                            <li>Нет встроенных ML возможностей</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>💰 Ценообразование:</strong><br>
+                    • Open Source: бесплатно (Apache 2.0 лицензия)<br>
+                    • ClickHouse Cloud: от $0.30/час за development tier<br>
+                    • Production: от $1-3/час в зависимости от конфигурации<br>
+                    • Self-hosted: только затраты на инфраструктуру
+                </div>
+
+                <div class="success-box">
+                    <strong>🎯 Лучше всего подходит для:</strong><br>
+                    • Real-time аналитики и дашбордов<br>
+                    • Логов и событий (event analytics)<br>
+                    • Time-series данных<br>
+                    • Проектов с требованиями к скорости<br>
+                    • Ограниченного бюджета
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Databricks -->
+        <div class="slide">
+            <div class="slide-header">
+                Databricks: Lakehouse платформа
+            </div>
+            <div class="slide-content">
+                <h2>Databricks Lakehouse Platform</h2>
+                
+                <div style="margin: 20px 0;">
+                    <span class="badge badge-cloud">Multi-Cloud</span>
+                    <span class="badge badge-commercial">Commercial</span>
+                    <span class="badge badge-hybrid">Lakehouse</span>
+                </div>
+
+                <h3>Ключевые особенности</h3>
+                <ul>
+                    <li><strong>Lakehouse архитектура:</strong> Объединение Data Lake и Data Warehouse</li>
+                    <li><strong>Delta Lake:</strong> ACID транзакции поверх object storage</li>
+                    <li><strong>Unified Analytics:</strong> SQL, Python, Scala, R в одной платформе</li>
+                    <li><strong>Apache Spark:</strong> Оптимизированный Spark runtime (Photon engine)</li>
+                    <li><strong>ML Integration:</strong> MLflow для lifecycle управления моделями</li>
+                    <li><strong>Collaborative notebooks:</strong> Интерактивные ноутбуки для команд</li>
+                    <li><strong>Unity Catalog:</strong> Unified governance для всех данных</li>
+                </ul>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Преимущества</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Универсальная платформа для data + AI/ML</li>
+                            <li>Отличная поддержка больших данных (Spark)</li>
+                            <li>Delta Lake для ACID в data lake</li>
+                            <li>Collaborative среда разработки</li>
+                            <li>Photon engine для ускорения SQL</li>
+                            <li>Поддержка streaming и batch</li>
+                            <li>Интеграция с популярными BI инструментами</li>
+                            <li>Multi-cloud (AWS, Azure, GCP)</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ Ограничения</h4>
+                        <ul style="margin-left: 20px; font-size: 0.95em;">
+                            <li>Высокая стоимость (DBU pricing)</li>
+                            <li>Сложность для SQL-only пользователей</li>
+                            <li>Требуется знание Spark</li>
+                            <li>Vendor lock-in в Databricks</li>
+                            <li>SQL performance уступает специализированным DW</li>
+                            <li>Сложность управления затратами</li>
+                            <li>Кривая обучения для новичков</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>💰 Ценообразование:</strong><br>
+                    • DBU (Databricks Unit): основная единица расчёта<br>
+                    • Jobs Compute: ~$0.15/DBU (для batch jobs)<br>
+                    • All-Purpose Compute: ~$0.55/DBU (для интерактивной работы)<br>
+                    • SQL Compute: ~$0.22/DBU (для SQL warehouses)<br>
+                    • + стоимость VM инфраструктуры облачного провайдера
+                </div>
+
+                <div class="success-box">
+                    <strong>🎯 Лучше всего подходит для:</strong><br>
+                    • Data Science и ML workloads<br>
+                    • Lakehouse архитектуры<br>
+                    • Unified batch + streaming<br>
+                    • Команд с Spark экспертизой<br>
+                    • Сложных ETL пайплайнов
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Performance Comparison -->
+        <div class="slide">
+            <div class="slide-header">
+                Сравнение производительности
+            </div>
+            <div class="slide-content">
+                <h2>Оценка по ключевым метрикам</h2>
+                <p style="margin-bottom: 20px; color: #666;">Оценка от 1 (худшее) до 5 (лучшее) по различным аспектам производительности</p>
+
+                <div class="score-grid">
+                    <div class="score-header">СУБД</div>
+                    <div class="score-header">OLAP<br>Query</div>
+                    <div class="score-header">Data<br>Loading</div>
+                    <div class="score-header">Concurrent<br>Users</div>
+                    <div class="score-header">Real-time<br>Analytics</div>
+                    <div class="score-header">Complex<br>Joins</div>
+
+                    <div class="score-name">GreenPlum</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-3">3</div>
+                    <div class="score-cell score-5">5</div>
+
+                    <div class="score-name">AWS Redshift</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-3">3</div>
+                    <div class="score-cell score-3">3</div>
+                    <div class="score-cell score-4">4</div>
+
+                    <div class="score-name">Azure Synapse</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-3">3</div>
+                    <div class="score-cell score-4">4</div>
+
+                    <div class="score-name">BigQuery</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-3">3</div>
+
+                    <div class="score-name">Snowflake</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-4">4</div>
+
+                    <div class="score-name">ClickHouse</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-3">3</div>
+
+                    <div class="score-name">Databricks</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-5">5</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-4">4</div>
+                    <div class="score-cell score-5">5</div>
+                </div>
+
+                <h3>Расшифровка метрик</h3>
+                <div class="two-column" style="font-size: 0.95em;">
+                    <div>
+                        <p><strong style="color: #4472C4;">OLAP Query:</strong> Скорость выполнения сложных аналитических запросов</p>
+                        <p><strong style="color: #4472C4;">Data Loading:</strong> Скорость загрузки больших объёмов данных</p>
+                        <p><strong style="color: #4472C4;">Concurrent Users:</strong> Способность обрабатывать множество одновременных запросов</p>
+                    </div>
+                    <div>
+                        <p><strong style="color: #4472C4;">Real-time Analytics:</strong> Производительность при работе со свежими данными</p>
+                        <p><strong style="color: #4472C4;">Complex Joins:</strong> Эффективность выполнения сложных JOIN операций</p>
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <strong>⚠️ Важно:</strong> Реальная производительность зависит от множества факторов: 
+                    размера данных, схемы, типа запросов, конфигурации системы и оптимизации. 
+                    Эти оценки являются обобщёнными и должны быть проверены на ваших workloads.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Cost Comparison -->
+        <div class="slide">
+            <div class="slide-header">
+                Сравнение стоимости владения (TCO)
+            </div>
+            <div class="slide-content">
+                <h2>Анализ затрат</h2>
+                <p style="margin-bottom: 20px; color: #666;">Приблизительная оценка годовой стоимости для среднего enterprise DWH (10TB данных, 50-100 пользователей)</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>СУБД</th>
+                            <th>Начальные затраты</th>
+                            <th>Ежемесячные затраты</th>
+                            <th>Масштабирование</th>
+                            <th>TCO (3 года)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GreenPlum</strong></td>
+                            <td>Средние (инфраструктура)<br>$10K-50K</td>
+                            <td>$2K-5K<br>(инфраструктура + поддержка)</td>
+                            <td>Линейные затраты</td>
+                            <td style="color: #70AD47; font-weight: bold;">$100K-200K ✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AWS Redshift</strong></td>
+                            <td>Низкие<br>$1K-5K</td>
+                            <td>$5K-15K<br>(зависит от RI)</td>
+                            <td>Ступенчатые</td>
+                            <td>$200K-500K</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Azure Synapse</strong></td>
+                            <td>Низкие<br>$1K-5K</td>
+                            <td>$7K-20K<br>(Dedicated Pool)</td>
+                            <td>Гибкие DWU</td>
+                            <td>$250K-700K</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BigQuery</strong></td>
+                            <td>Очень низкие<br>$0-1K</td>
+                            <td>$5K-20K<br>(зависит от queries)</td>
+                            <td>Автоматическое</td>
+                            <td>$200K-700K</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Snowflake</strong></td>
+                            <td>Низкие<br>$0-2K</td>
+                            <td>$10K-30K<br>(compute + storage)</td>
+                            <td>Автоматическое</td>
+                            <td style="color: #E91E63; font-weight: bold;">$350K-1M ✗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ClickHouse</strong></td>
+                            <td>Низкие<br>$5K-20K</td>
+                            <td>$1K-3K<br>(инфраструктура)</td>
+                            <td>Линейные</td>
+                            <td style="color: #70AD47; font-weight: bold;">$50K-120K ✓✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Databricks</strong></td>
+                            <td>Средние<br>$2K-10K</td>
+                            <td>$8K-25K<br>(DBU + VM)</td>
+                            <td>Автоматическое</td>
+                            <td>$300K-900K</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="two-column" style="margin-top: 30px;">
+                    <div class="success-box">
+                        <h4>💰 Факторы снижения затрат</h4>
+                        <ul style="margin-left: 20px; font-size: 0.9em;">
+                            <li>Open Source решения (GreenPlum, ClickHouse)</li>
+                            <li>Reserved Instances для cloud (AWS, Azure)</li>
+                            <li>Оптимизация queries и data models</li>
+                            <li>Использование compression</li>
+                            <li>Правильный выбор distribution/partitioning</li>
+                            <li>Auto-pause для dev/test окружений</li>
+                        </ul>
+                    </div>
+                    <div class="highlight">
+                        <h4>⚠️ Скрытые затраты</h4>
+                        <ul style="margin-left: 20px; font-size: 0.9em;">
+                            <li>Data transfer (egress fees)</li>
+                            <li>Администрирование и поддержка</li>
+                            <li>Обучение команды</li>
+                            <li>Миграция данных</li>
+                            <li>Мониторинг и алертинг</li>
+                            <li>Compliance и безопасность</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Use Case Matrix -->
+        <div class="slide">
+            <div class="slide-header">
+                Матрица применимости по сценариям
+            </div>
+            <div class="slide-content">
+                <h2>Какую СУБД выбрать для вашего случая?</h2>
+
+                <table class="comparison-table" style="font-size: 0.85em;">
+                    <thead>
+                        <tr>
+                            <th>Сценарий использования</th>
+                            <th>Рекомендация #1</th>
+                            <th>Рекомендация #2</th>
+                            <th>Альтернатива</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Enterprise DWH<br>(традиционный)</strong></td>
+                            <td style="background: #E2EFDA;">GreenPlum<br>💰 Низкий TCO</td>
+                            <td>Redshift<br>🔧 Managed</td>
+                            <td>Synapse<br>🏢 MS Stack</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Real-time аналитика<br>(дашборды, метрики)</strong></td>
+                            <td style="background: #E2EFDA;">ClickHouse<br>⚡ Скорость</td>
+                            <td>BigQuery<br>📊 Serverless</td>
+                            <td>Redshift<br>🔄 Streaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ad-hoc аналитика<br>(бизнес-аналитики)</strong></td>
+                            <td style="background: #E2EFDA;">BigQuery<br>🚀 Простота</td>
+                            <td>Snowflake<br>💎 UX</td>
+                            <td>Synapse Serverless<br>📝 T-SQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Science + ML<br>(модели, эксперименты)</strong></td>
+                            <td style="background: #E2EFDA;">Databricks<br>🤖 ML Platform</td>
+                            <td>Snowflake<br>🔬 Snowpark</td>
+                            <td>BigQuery ML<br>📈 SQL-based</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Multi-cloud стратегия<br>(портативность)</strong></td>
+                            <td style="background: #E2EFDA;">Snowflake<br>☁️ Multi-cloud</td>
+                            <td>Databricks<br>🔀 Portable</td>
+                            <td>GreenPlum<br>🆓 Open Source</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Стартап / MVP<br>(быстрый старт)</strong></td>
+                            <td style="background: #E2EFDA;">BigQuery<br>⚡ Serverless</td>
+                            <td>Snowflake<br>🎯 Simple</td>
+                            <td>ClickHouse Cloud<br>💸 Budget</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Regulated industries<br>(финансы, медицина)</strong></td>
+                            <td style="background: #E2EFDA;">GreenPlum<br>🔒 On-Prem</td>
+                            <td>Synapse<br>🛡️ Compliance</td>
+                            <td>Snowflake<br>✅ Certified</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Event streaming<br>(IoT, логи)</strong></td>
+                            <td style="background: #E2EFDA;">ClickHouse<br>📡 Real-time</td>
+                            <td>Databricks<br>🌊 Streaming</td>
+                            <td>BigQuery<br>💨 Streaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lakehouse архитектура<br>(unified analytics)</strong></td>
+                            <td style="background: #E2EFDA;">Databricks<br>🏠 Native</td>
+                            <td>Synapse<br>🔗 Integrated</td>
+                            <td>Snowflake<br>📦 Iceberg</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ограниченный бюджет<br>(&lt;$100K/year)</strong></td>
+                            <td style="background: #E2EFDA;">ClickHouse<br>💰 Cheapest</td>
+                            <td>GreenPlum<br>🆓 Open Source</td>
+                            <td>BigQuery<br>💳 Pay-as-go</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <strong>💡 Совет:</strong> Не существует универсального решения. Выбор должен основываться на 
+                    комплексном анализе: технических требований, бюджета, экспертизы команды, существующей 
+                    инфраструктуры и долгосрочной стратегии.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Discussion Questions -->
+        <div class="slide">
+            <div class="slide-header">
+                Вопросы для обсуждения
+            </div>
+            <div class="slide-content">
+                <h2>Групповое обсуждение (15 минут)</h2>
+
+                <div class="discussion-box">
+                    <div class="discussion-icon">💬</div>
+                    <h3>Вопрос 1: Выбор архитектуры</h3>
+                    <p style="font-size: 1.1em; margin-top: 10px;">
+                        Ваша компания планирует построить новый Data Warehouse для аналитики продаж. 
+                        У вас есть 200TB исторических данных, 1000+ бизнес-пользователей, и требования 
+                        к data residency (данные должны храниться в России).
+                    </p>
+                    <p style="margin-top: 15px; font-weight: bold; color: #4472C4;">
+                        Какую СУБД вы бы выбрали и почему? Обсудите в группах по 3-4 человека.
+                    </p>
+                </div>
+
+                <div class="discussion-box">
+                    <div class="discussion-icon">🤔</div>
+                    <h3>Вопрос 2: Миграция</h3>
+                    <p style="font-size: 1.1em; margin-top: 10px;">
+                        У вас работает on-premise Oracle DWH, и руководство хочет мигрировать в облако. 
+                        Команда имеет сильную SQL экспертизу, но опыта с cloud платформами нет. 
+                        Бюджет ограничен.
+                    </p>
+                    <p style="margin-top: 15px; font-weight: bold; color: #4472C4;">
+                        Какой путь миграции вы бы предложили? Стоит ли рассматривать hybrid подход?
+                    </p>
+                </div>
+
+                <div class="discussion-box">
+                    <div class="discussion-icon">⚖️</div>
+                    <h3>Вопрос 3: Trade-offs</h3>
+                    <p style="font-size: 1.1em; margin-top: 10px;">
+                        Сравните trade-offs между open source решением (GreenPlum/ClickHouse) 
+                        и полностью managed cloud сервисом (Snowflake/BigQuery).
+                    </p>
+                    <p style="margin-top: 15px; font-weight: bold; color: #4472C4;">
+                        В каких ситуациях выгоднее один подход vs другой? Какие факторы наиболее критичны?
+                    </p>
+                </div>
+
+                <div class="success-box" style="margin-top: 30px;">
+                    <strong>📝 Задание:</strong> Каждая группа готовит краткую презентацию (3-5 минут) 
+                    своих выводов. Фокусируйтесь на аргументации выбора и учёте реальных ограничений.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Decision Framework -->
+        <div class="slide">
+            <div class="slide-header">
+                Фреймворк принятия решения
+            </div>
+            <div class="slide-content">
+                <h2>Как выбрать аналитическую СУБД?</h2>
+                <p style="margin-bottom: 30px; color: #666;">Структурированный подход к выбору на основе ключевых критериев</p>
+
+                <div class="three-column">
+                    <div class="dbms-card">
+                        <h4>1️⃣ Технические требования</h4>
+                        <ul style="margin-left: 15px; font-size: 0.9em;">
+                            <li>Объём данных (TB/PB)</li>
+                            <li>Количество пользователей</li>
+                            <li>Query patterns (OLAP/streaming)</li>
+                            <li>Latency требования</li>
+                            <li>Типы данных (structured/semi-structured)</li>
+                            <li>Интеграции (BI tools, ETL)</li>
+                            <li>Compliance (GDPR, HIPAA, etc.)</li>
+                        </ul>
+                    </div>
+                    <div class="dbms-card">
+                        <h4>2️⃣ Организационные факторы</h4>
+                        <ul style="margin-left: 15px; font-size: 0.9em;">
+                            <li>Бюджет (CAPEX vs OPEX)</li>
+                            <li>Экспертиза команды</li>
+                            <li>Облачная стратегия</li>
+                            <li>Существующая инфраструктура</li>
+                            <li>Vendor preferences</li>
+                            <li>Support & SLA требования</li>
+                            <li>Time-to-market</li>
+                        </ul>
+                    </div>
+                    <div class="dbms-card">
+                        <h4>3️⃣ Долгосрочные цели</h4>
+                        <ul style="margin-left: 15px; font-size: 0.9em;">
+                            <li>Рост данных (прогноз)</li>
+                            <li>Масштабируемость</li>
+                            <li>Vendor lock-in tolerance</li>
+                            <li>ML/AI планы</li>
+                            <li>Multi-cloud стратегия</li>
+                            <li>BI/Data platform vision</li>
+                            <li>TCO optimization</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Пошаговый процесс выбора</h3>
+                <div style="background: #F5F5F5; padding: 25px; border-radius: 10px; margin: 20px 0;">
+                    <ol style="line-height: 2; font-size: 1.05em;">
+                        <li><strong style="color: #4472C4;">Определите приоритеты:</strong> Что важнее - стоимость, производительность, простота?</li>
+                        <li><strong style="color: #4472C4;">Оцените текущее состояние:</strong> Инфраструктура, команда, бюджет</li>
+                        <li><strong style="color: #4472C4;">Составьте shortlist:</strong> 2-3 решения на основе must-have требований</li>
+                        <li><strong style="color: #4472C4;">Проведите PoC:</strong> Тестируйте на реальных данных и workloads</li>
+                        <li><strong style="color: #4472C4;">Оцените TCO:</strong> Считайте полную стоимость на 3-5 лет</li>
+                        <li><strong style="color: #4472C4;">Учтите людей:</strong> Легко ли команде будет работать с решением?</li>
+                        <li><strong style="color: #4472C4;">Примите решение:</strong> На основе взвешенной оценки всех факторов</li>
+                    </ol>
+                </div>
+
+                <div class="highlight">
+                    <strong>⚠️ Частые ошибки при выборе:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Выбор на основе только одного критерия (например, только цены)</li>
+                        <li>Недооценка сложности миграции</li>
+                        <li>Игнорирование экспертизы команды</li>
+                        <li>Неучёт роста данных в будущем</li>
+                        <li>Отсутствие реального PoC на production-like данных</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Summary -->
+        <div class="slide">
+            <div class="slide-header">
+                Резюме и ключевые выводы
+            </div>
+            <div class="slide-content">
+                <h2>Что нужно запомнить</h2>
+
+                <div class="success-box">
+                    <h3 style="color: #70AD47; margin-top: 0;">✅ Ключевые выводы</h3>
+                    <ul style="margin-left: 20px; font-size: 1.05em; line-height: 1.8;">
+                        <li><strong>Нет универсального решения:</strong> Каждая СУБД оптимальна для определённых сценариев</li>
+                        <li><strong>GreenPlum и ClickHouse:</strong> Лучший TCO для on-premise и ограниченных бюджетов</li>
+                        <li><strong>Cloud-native:</strong> Snowflake, BigQuery, Synapse - минимум администрирования</li>
+                        <li><strong>Databricks:</strong> Универсальная платформа для data + AI/ML задач</li>
+                        <li><strong>Проводите PoC:</strong> Тестируйте на реальных данных перед принятием решения</li>
+                    </ul>
+                </div>
+
+                <h3>Быстрые рекомендации</h3>
+                <div class="two-column">
+                    <div>
+                        <div class="info-box">
+                            <h4>💰 Минимальный TCO</h4>
+                            <p style="margin-top: 10px;">
+                                <strong style="color: #70AD47;">ClickHouse</strong> для real-time<br>
+                                <strong style="color: #70AD47;">GreenPlum</strong> для enterprise DWH
+                            </p>
+                        </div>
+                        <div class="info-box">
+                            <h4>🚀 Быстрый старт</h4>
+                            <p style="margin-top: 10px;">
+                                <strong style="color: #4472C4;">BigQuery</strong> - serverless, zero admin<br>
+                                <strong style="color: #4472C4;">Snowflake</strong> - простота использования
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="info-box">
+                            <h4>⚡ Максимальная производительность</h4>
+                            <p style="margin-top: 10px;">
+                                <strong style="color: #ED7D31;">ClickHouse</strong> для OLAP<br>
+                                <strong style="color: #ED7D31;">BigQuery</strong> для scale
+                            </p>
+                        </div>
+                        <div class="info-box">
+                            <h4>🔬 Data Science / ML</h4>
+                            <p style="margin-top: 10px;">
+                                <strong style="color: #764ba2;">Databricks</strong> - lakehouse platform<br>
+                                <strong style="color: #764ba2;">Snowflake</strong> - Snowpark ML
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight" style="margin-top: 30px;">
+                    <h4>📚 Дополнительные материалы</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Benchmarks: TPC-H, TPC-DS для объективного сравнения производительности</li>
+                        <li>Vendor documentation: Изучите best practices от каждого вендора</li>
+                        <li>Community forums: Реальный опыт от других пользователей</li>
+                        <li>Case studies: Кейсы компаний, схожих с вашей</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px; font-size: 1.8em; color: #4472C4;">
+                    <strong>Спасибо за внимание! 🎉</strong>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="slide-counter"></div>
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn">← Назад</button>
+        <button class="nav-btn" id="nextBtn">Вперёд →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            document.querySelector('.slide-counter').textContent = `Слайд ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => showSlide(currentSlide - 1));
+        document.getElementById('nextBtn').addEventListener('click', () => showSlide(currentSlide + 1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                showSlide(currentSlide + 1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

@@ -39,24 +39,15 @@ CREATE TABLE orders_partitioned (
     total_amount DECIMAL(12, 2) NOT NULL,
     status VARCHAR(20) NOT NULL,
     shipping_address TEXT,
-    PRIMARY KEY (order_id, order_date)
-)
-DISTRIBUTED BY (customer_id)
-PARTITION BY RANGE (order_date)
-(
-    START (DATE '2024-01-01') INCLUSIVE
-    END (DATE '2025-01-01') EXCLUSIVE
-    EVERY (INTERVAL '1 month'),
-    DEFAULT PARTITION outliers
-);
+    PRIMARY KEY (order_id, order_date,customer_id
 ```
 
 ### Шаг 1.3: Создание непартиционированной таблицы для сравнения
 
 ```sql
--- Такая же таблица без партиционирования
+ -- Такая же таблица без партиционирования
 CREATE TABLE orders_no_partition (
-    order_id BIGSERIAL PRIMARY KEY,
+    order_id BIGSERIAL ,
     customer_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
     order_date DATE NOT NULL,
@@ -65,7 +56,8 @@ CREATE TABLE orders_no_partition (
     unit_price DECIMAL(10, 2) NOT NULL,
     total_amount DECIMAL(12, 2) NOT NULL,
     status VARCHAR(20) NOT NULL,
-    shipping_address TEXT
+    shipping_address TEXT,
+    PRIMARY KEY (order_id, order_date,customer_id)
 ) DISTRIBUTED BY (customer_id);
 ```
 
@@ -156,6 +148,7 @@ ORDER BY order_date;
 ```
 
 **Что искать в плане выполнения:**
+
 1. **Partition Pruning** - исключение ненужных партиций
 2. **Seq Scan vs Index Scan** - тип сканирования
 3. **Motion операции** - перемещение данных между сегментами
@@ -177,6 +170,7 @@ ORDER BY order_date;
 ```
 
 **Задание:** Сравните:
+
 - Количество сканируемых строк
 - Время выполнения
 - Наличие partition pruning
@@ -259,6 +253,7 @@ ORDER BY total_revenue DESC;
 ```
 
 **Обратите внимание:**
+
 - Отсутствие Redistribute Motion (благодаря REPLICATED)
 - Эффективность Broadcast Join
 - Применение partition pruning
@@ -351,7 +346,8 @@ GROUP BY o.order_id, o.order_date
 LIMIT 100;
 ```
 
-**Задание:** 
+**Задание:**
+
 - Сравните планы выполнения двух запросов
 - Измерьте время выполнения
 - Найдите Redistribute Motion в первом плане
@@ -506,6 +502,7 @@ ORDER BY o.order_date DESC;
 ```
 
 **Ваша задача:**
+
 1. Проанализируйте план выполнения
 2. Определите узкие места
 3. Оптимизируйте запрос (подсказка: используйте window functions)
@@ -537,16 +534,19 @@ FROM (
 WHERE next_amount > total_amount
 ORDER BY order_date DESC;
 ```
+
 </details>
 
 ### Задание 2: Написание эффективного отчета
 
 Требуется создать отчет по продажам с следующими метриками:
+
 - Выручка по странам и категориям за последние 3 месяца
 - Рост по сравнению с предыдущим периодом
 - Top-10 клиентов по выручке
 
 **Требования:**
+
 - Используйте партиционирование для ускорения
 - Минимизируйте Redistribute Motion
 - Оптимизируйте GROUP BY
@@ -635,6 +635,7 @@ JOIN customers c ON tc.customer_id = c.customer_id
 WHERE tc.rank <= 10
 ORDER BY tc.rank;
 ```
+
 </details>
 
 ### Задание 3: Отладка проблемы с производительностью
@@ -656,6 +657,7 @@ ORDER BY revenue DESC;
 ```
 
 **Задачи:**
+
 1. Используйте EXPLAIN ANALYZE
 2. Определите причины медленной работы
 3. Предложите и реализуйте оптимизации
@@ -692,13 +694,9 @@ VALUES
 ## Контрольные вопросы
 
 1. **Как partition pruning влияет на производительность запросов?**
-
 2. **Почему JOIN по distribution key быстрее?**
-
 3. **В каких случаях CTE (WITH) эффективнее подзапросов?**
-
 4. **Когда стоит использовать материализованные представления?**
-
 5. **Как интерпретировать план EXPLAIN ANALYZE?**
 
 ## Лучшие практики (Best Practices)

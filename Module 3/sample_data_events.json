@@ -1,0 +1,20 @@
+{"user_id": 1001, "event_type": "page_view", "timestamp": "2024-11-14T10:00:00", "page": "/home", "duration": 45, "referrer": "google.com"}
+{"user_id": 1002, "event_type": "click", "timestamp": "2024-11-14T10:01:00", "element": "button", "page": "/products", "button_text": "Buy Now"}
+{"user_id": 1003, "event_type": "purchase", "timestamp": "2024-11-14T10:05:00", "amount": 99.99, "items": ["Laptop", "Mouse", "Keyboard"], "payment_method": "Credit Card"}
+{"user_id": 1001, "event_type": "logout", "timestamp": "2024-11-14T10:10:00", "session_duration": 600}
+{"user_id": 1004, "event_type": "search", "timestamp": "2024-11-14T10:15:00", "query": "laptop", "results": 42, "filters": {"price_min": 500, "price_max": 2000}}
+{"user_id": 1005, "event_type": "page_view", "timestamp": "2024-11-14T10:20:00", "page": "/cart", "duration": 120}
+{"user_id": 1002, "event_type": "add_to_cart", "timestamp": "2024-11-14T10:25:00", "product_id": 123, "product_name": "Wireless Mouse", "price": 29.99}
+{"user_id": 1006, "event_type": "registration", "timestamp": "2024-11-14T10:30:00", "email": "user6@example.com", "country": "USA", "source": "facebook"}
+{"user_id": 1003, "event_type": "review", "timestamp": "2024-11-14T10:35:00", "product_id": 456, "rating": 5, "text": "Excellent product!", "helpful_count": 0}
+{"user_id": 1007, "event_type": "page_view", "timestamp": "2024-11-14T10:40:00", "page": "/about", "duration": 30}
+{"user_id": 1001, "event_type": "login", "timestamp": "2024-11-14T11:00:00", "device": "mobile", "os": "iOS"}
+{"user_id": 1008, "event_type": "search", "timestamp": "2024-11-14T11:05:00", "query": "gaming keyboard", "results": 28}
+{"user_id": 1004, "event_type": "click", "timestamp": "2024-11-14T11:10:00", "element": "link", "page": "/products/laptop", "link_text": "View Details"}
+{"user_id": 1009, "event_type": "page_view", "timestamp": "2024-11-14T11:15:00", "page": "/blog/tech-tips", "duration": 180, "scroll_depth": 75}
+{"user_id": 1002, "event_type": "purchase", "timestamp": "2024-11-14T11:20:00", "amount": 29.99, "items": ["Wireless Mouse"], "payment_method": "PayPal", "discount_code": "SAVE10"}
+{"user_id": 1010, "event_type": "registration", "timestamp": "2024-11-14T11:25:00", "email": "user10@example.com", "country": "Canada", "source": "google"}
+{"user_id": 1005, "event_type": "add_to_cart", "timestamp": "2024-11-14T11:30:00", "product_id": 789, "product_name": "USB Cable", "price": 9.99}
+{"user_id": 1003, "event_type": "page_view", "timestamp": "2024-11-14T11:35:00", "page": "/support", "duration": 90}
+{"user_id": 1006, "event_type": "click", "timestamp": "2024-11-14T11:40:00", "element": "menu_item", "page": "/home", "menu_item": "Products"}
+{"user_id": 1001, "event_type": "logout", "timestamp": "2024-11-14T11:45:00", "session_duration": 2700}

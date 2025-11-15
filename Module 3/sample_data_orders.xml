@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orders>
+    <order>
+        <order_id>1001</order_id>
+        <customer_id>5001</customer_id>
+        <customer_name>John Smith</customer_name>
+        <customer_email>john.smith@example.com</customer_email>
+        <order_date>2024-11-10</order_date>
+        <total>250.00</total>
+        <status>completed</status>
+        <items>
+            <item>
+                <product_name>Laptop</product_name>
+                <quantity>1</quantity>
+                <unit_price>200.00</unit_price>
+            </item>
+            <item>
+                <product_name>Mouse</product_name>
+                <quantity>2</quantity>
+                <unit_price>25.00</unit_price>
+            </item>
+        </items>
+    </order>
+    <order>
+        <order_id>1002</order_id>
+        <customer_id>5002</customer_id>
+        <customer_name>Jane Doe</customer_name>
+        <customer_email>jane.doe@example.com</customer_email>
+        <order_date>2024-11-11</order_date>
+        <total>150.00</total>
+        <status>pending</status>
+        <items>
+            <item>
+                <product_name>Keyboard</product_name>
+                <quantity>1</quantity>
+                <unit_price>150.00</unit_price>
+            </item>
+        </items>
+    </order>
+    <order>
+        <order_id>1003</order_id>
+        <customer_id>5003</customer_id>
+        <customer_name>Bob Johnson</customer_name>
+        <customer_email>bob.johnson@example.com</customer_email>
+        <order_date>2024-11-12</order_date>
+        <total>435.00</total>
+        <status>completed</status>
+        <items>
+            <item>
+                <product_name>Monitor</product_name>
+                <quantity>1</quantity>
+                <unit_price>300.00</unit_price>
+            </item>
+            <item>
+                <product_name>HDMI Cable</product_name>
+                <quantity>2</quantity>
+                <unit_price>15.00</unit_price>
+            </item>
+            <item>
+                <product_name>Laptop Stand</product_name>
+                <quantity>1</quantity>
+                <unit_price>105.00</unit_price>
+            </item>
+        </items>
+    </order>
+    <order>
+        <order_id>1004</order_id>
+        <customer_id>5004</customer_id>
+        <customer_name>Alice Williams</customer_name>
+        <customer_email>alice.williams@example.com</customer_email>
+        <order_date>2024-11-13</order_date>
+        <total>89.99</total>
+        <status>processing</status>
+        <items>
+            <item>
+                <product_name>Wireless Keyboard</product_name>
+                <quantity>1</quantity>
+                <unit_price>59.99</unit_price>
+            </item>
+            <item>
+                <product_name>Wireless Mouse</product_name>
+                <quantity>1</quantity>
+                <unit_price>30.00</unit_price>
+            </item>
+        </items>
+    </order>
+    <order>
+        <order_id>1005</order_id>
+        <customer_id>5005</customer_id>
+        <customer_name>Charlie Brown</customer_name>
+        <customer_email>charlie.brown@example.com</customer_email>
+        <order_date>2024-11-14</order_date>
+        <total>1299.00</total>
+        <status>completed</status>
+        <items>
+            <item>
+                <product_name>Gaming Laptop</product_name>
+                <quantity>1</quantity>
+                <unit_price>1200.00</unit_price>
+            </item>
+            <item>
+                <product_name>Gaming Mouse</product_name>
+                <quantity>1</quantity>
+                <unit_price>79.00</unit_price>
+            </item>
+            <item>
+                <product_name>Mouse Pad</product_name>
+                <quantity>1</quantity>
+                <unit_price>20.00</unit_price>
+            </item>
+        </items>
+    </order>
+</orders>
